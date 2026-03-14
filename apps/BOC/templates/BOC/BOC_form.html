@@ -1,49 +1,158 @@
 {% extends "layouts/base.html" %}
-{% block content %}
-<div class="container-fluid full-dashboard">
-  <h2>BOC Creation</h2>
 
-  <div class="card card-primary mt-3">
-    <div class="card-header">
-      <h3 class="card-title">BOC Creation Form</h3>
+{% block content %}
+<div class="container-fluid full-dashboard bg-white pb-5">
+    <div class="d-flex justify-content-between align-items-center pt-2 px-2">
+        <div class="d-flex align-items-center">
+            <h2 class="mb-0 mr-2" style="color: #d11252; font-weight: bold;">VOSS</h2>
+            <h3 class="mb-0 text-secondary" style="font-size: 1.5rem;">BOC Creation</h3>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm px-4"><i><u>Back</u></i></button>
     </div>
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="card-body">
-        <!-- Customer ID -->
-        <div class="form-group">
-          <label for="customer_id">Customer ID</label>
-          <select id="customer_id" name="customer_id" class="form-control">
-            <option value="">Select ID</option>
-            {% for id in customer_ids %}
-              <option value="{{ id }}">{{ id }}</option>
-            {% endfor %}
-          </select>
+    <hr class="my-2">
+
+    <form method="post" class="px-2">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-5">
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">Customer ID</span></div>
+                    <input type="text" name="customer_id" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">Customer Name</span></div>
+                    <input type="text" name="customer_name" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">Item Number</span></div>
+                    <select name="item_number" class="form-control border-secondary"><option></option></select>
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">Customer Drg# No#</span></div>
+                    <input type="text" name="drg_no" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">DRG Rev# No#</span></div>
+                    <input type="text" name="rev_no" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">DRG Rev Date</span></div>
+                    <input type="text" name="rev_date" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">Customer Part Set No#</span></div>
+                    <input type="text" name="part_set_no" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 170px;">Table ID</span></div>
+                    <select name="table_id" class="form-control border-secondary"><option></option></select>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 150px;">Last ECN No</span></div>
+                    <input type="text" class="form-control border-secondary" style="background-color: #c0c0c0;" disabled>
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 150px;">Part Name</span></div>
+                    <input type="text" name="part_name" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 150px;">Project</span></div>
+                    <input type="text" name="project" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 150px;">Project SOP Date</span></div>
+                    <input type="text" name="sop_date" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 150px;">RFQ NO</span></div>
+                    <input type="text" name="rfq_no" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 150px;">Annual Volume</span></div>
+                    <input type="text" name="volume" class="form-control border-secondary">
+                </div>
+                <div class="input-group input-group-sm mb-1">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 150px;">BOC_NO</span></div>
+                    <select name="boc_no" class="form-control border-secondary"><option></option></select>
+                </div>
+            </div>
         </div>
 
-        <!-- Customer Name -->
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Enter customer name">
+        <div class="mt-3">
+            <button type="button" class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Create</button>
+            <button type="button" class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Edit</button>
+            <button type="submit" class="btn btn-sm text-white px-4 mr-4" style="background-color: #5b74a3;">Save</button>
+            
+            <button type="button" class="btn btn-sm text-white px-2 mr-1" style="background-color: #5b74a3;">Send Approval</button>
+            <button type="button" class="btn btn-sm text-white px-4" style="background-color: #5b74a3;">ECN</button>
         </div>
-
-        <!-- Search Name -->
-        <div class="form-group">
-          <label for="search_name">Search Name</label>
-          <select id="search_name" name="search_name" class="form-control">
-            <option value="">Select Search Name</option>
-            {% for sname in search_names %}
-              <option value="{{ sname }}">{{ sname }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <div class="card-footer text-right">
-        <button type="submit" class="btn btn-success">Submit</button>
-      </div>
     </form>
-  </div>
+
+    <hr class="my-3" style="border-top: 2px solid #333;">
+
+    <div class="px-2">
+        <ul class="nav nav-tabs border-0 small">
+            <li class="nav-item">
+                <a class="nav-link active border text-dark py-1 px-2" style="background-color: #fff;">Tooling_Production</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link border text-muted py-1 px-2" style="background-color: #e9ecef;">Tooling_BOC</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link border text-muted py-1 px-2" style="background-color: #e9ecef;">BOC_Status</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link border text-muted py-1 px-2" style="background-color: #e9ecef;">BOM_NewParts_Cost</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link border text-muted py-1 px-2" style="background-color: #e9ecef;">BOM_NewParts_SettlePrice</a>
+            </li>
+        </ul>
+
+        <div class="tab-content border p-3" style="min-height: 300px; margin-top: -1px;">
+            <div class="tab-pane fade show active">
+                <div class="row no-gutters text-center border-secondary mb-0" style="font-size: 0.85rem;">
+                    <div class="col-md-4 border bg-light py-1">Tool Description</div>
+                    <div class="col-md-2 border bg-light py-1">Unit Cost</div>
+                    <div class="col-md-1 border bg-light py-1">Quantity</div>
+                    <div class="col-md-2 border bg-light py-1">Total Estimate</div>
+                    <div class="col-md-3 border bg-light py-1">Remark</div>
+                </div>
+
+                <div class="row no-gutters mb-3">
+                    <div class="col-md-4"><select class="form-control form-control-sm border-secondary rounded-0"><option></option></select></div>
+                    <div class="col-md-2"><input type="text" class="form-control form-control-sm border-secondary rounded-0"></div>
+                    <div class="col-md-1"><input type="text" class="form-control form-control-sm border-secondary rounded-0"></div>
+                    <div class="col-md-2"><input type="text" class="form-control form-control-sm border-secondary rounded-0 bg-light" disabled></div>
+                    <div class="col-md-3"><input type="text" class="form-control form-control-sm border-secondary rounded-0"></div>
+                </div>
+
+                <div class="mb-4">
+                    <button class="btn btn-sm text-white px-4 mr-2" style="background-color: #5b74a3;">Save</button>
+                    <button class="btn btn-sm text-white px-3" style="background-color: #5b74a3;">Complete</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered" style="font-size: 0.85rem;">
+                        <thead class="bg-light">
+                            <tr>
+                                <th style="width: 33.3%;">Tool Description</th>
+                                <th style="width: 16.6%;">Unit Cost</th>
+                                <th style="width: 8.3%;">Quantity</th>
+                                <th style="width: 16.6%;">Total Estimate</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

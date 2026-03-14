@@ -1,49 +1,77 @@
 {% extends "layouts/base.html" %}
-{% block content %}
-<div class="container-fluid full-dashboard">
-  <h2>Costing & BC Calculations</h2>
 
-  <div class="card card-primary mt-3">
-    <div class="card-header">
-      <h3 class="card-title">Costing & BC Calculations Form</h3>
+{% block content %}
+<div class="container-fluid full-dashboard bg-white">
+    <div class="d-flex justify-content-between align-items-center pt-2 px-3">
+        <div class="d-flex align-items-center">
+            <h2 class="mb-0 mr-3" style="color: #d11252; font-weight: bold;">VOSS</h2>
+            <h3 class="mb-0 text-secondary" style="font-size: 1.5rem;">Costing BC Calculations</h3>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm px-4"><i><u>Back</u></i></button>
     </div>
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="card-body">
-        <!-- Customer ID -->
-        <div class="form-group">
-          <label for="customer_id">Customer ID</label>
-          <select id="customer_id" name="customer_id" class="form-control">
-            <option value="">Select ID</option>
-            {% for id in customer_ids %}
-              <option value="{{ id }}">{{ id }}</option>
-            {% endfor %}
-          </select>
-        </div>
+    <hr class="my-2">
 
-        <!-- Customer Name -->
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Enter customer name">
-        </div>
+    <form method="post" class="px-3">
+        {% csrf_token %}
+        <div class="row align-items-start">
+            
+            <div class="col-md-3">
+                <div class="form-group row no-gutters mb-1">
+                    <label class="col-sm-5 col-form-label col-form-label-sm text-right pr-2">Customer ID :</label>
+                    <div class="col-sm-7">
+                        <input type="text" name="customer_id" class="form-control form-control-sm bg-light">
+                    </div>
+                </div>
+                <div class="form-group row no-gutters">
+                    <label class="col-sm-5 col-form-label col-form-label-sm text-right pr-2">Item Creation ID :</label>
+                    <div class="col-sm-7">
+                        <select name="item_id" class="form-control form-control-sm bg-light">
+                            <option value=""></option>
+                            {% for id in item_ids %}<option>{{ id }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Search Name -->
-        <div class="form-group">
-          <label for="search_name">Search Name</label>
-          <select id="search_name" name="search_name" class="form-control">
-            <option value="">Select Search Name</option>
-            {% for sname in search_names %}
-              <option value="{{ sname }}">{{ sname }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
+            <div class="col-md-3">
+                <div class="form-group row no-gutters">
+                    <label class="col-sm-6 col-form-label col-form-label-sm text-right pr-2">Assignment Year :</label>
+                    <div class="col-sm-6">
+                        <select name="year" class="form-control form-control-sm bg-primary text-white font-weight-bold">
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-      <div class="card-footer text-right">
-        <button type="submit" class="btn btn-success">Submit</button>
-      </div>
+            <div class="col-md-4">
+                <fieldset class="border p-2" style="border-radius: 4px;">
+                    <legend class="w-auto px-2 small text-secondary" style="font-size: 0.75rem; margin-bottom: 0;">Closer Action</legend>
+                    <div class="d-flex align-items-center justify-content-around">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="completed">
+                            <label class="form-check-label small" for="completed">Is Completed</label>
+                        </div>
+                        <button type="submit" class="btn btn-sm text-white" style="background-color: #5b74a3;">
+                           <i class="fas fa-print"></i> Submit
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
     </form>
-  </div>
+
+    <div class="px-3 mt-2 pb-2" style="background-color: #f8f9fa;">
+        <div class="btn-group">
+            <button class="btn btn-sm mr-1 text-white" style="background-color: #5b74a3;">Norms</button>
+            <button class="btn btn-sm mr-1 text-white" style="background-color: #5b74a3;">Internal Conversion</button>
+            <button class="btn btn-sm mr-1 text-white" style="background-color: #5b74a3;">Data Tooling</button>
+            <button class="btn btn-sm text-white" style="background-color: #5b74a3;">Offer Sheet</button>
+        </div>
+    </div>
+
+    <div class="border-top" style="min-height: 400px; background-color: #ffffff;">
+        </div>
 </div>
 {% endblock %}

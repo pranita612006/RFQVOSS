@@ -1,49 +1,168 @@
 {% extends "layouts/base.html" %}
-{% block content %}
-<div class="container-fluid full-dashboard">
-  <h2>BOM Creation</h2>
 
-  <div class="card card-primary mt-3">
-    <div class="card-header">
-      <h3 class="card-title">BOM Creation Form</h3>
+{% block content %}
+<div class="container-fluid full-dashboard bg-white pb-5">
+    <div class="d-flex justify-content-between align-items-center pt-2 px-2">
+        <div class="d-flex align-items-center">
+            <h2 class="mb-0 mr-2" style="color: #d11252; font-weight: bold;">VOSS</h2>
+            <h3 class="mb-0 text-secondary" style="font-size: 1.5rem;">BOM Creation</h3>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm px-4"><i><u>Back</u></i></button>
     </div>
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="card-body">
-        <!-- Customer ID -->
-        <div class="form-group">
-          <label for="customer_id">Customer ID</label>
-          <select id="customer_id" name="customer_id" class="form-control">
-            <option value="">Select ID</option>
-            {% for id in customer_ids %}
-              <option value="{{ id }}">{{ id }}</option>
-            {% endfor %}
-          </select>
+    <hr class="my-2">
+
+    <div class="px-2">
+        <h6 class="font-weight-bold">Step 1 : <span class="text-secondary font-weight-normal">Create BOM</span></h6>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="row small">
+                <div class="col-md-5">
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Customer Name</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Item Creation Id</label>
+                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Description</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary text-muted">UOM_Code</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Fixture_No</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">No_Of_MEFT</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Action Status</label>
+                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Customer ID</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary bg-light border pr-1">Last ECN No</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-secondary opacity-50"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">No_Of_Parts</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Last_Date_Modified</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">BOM Creation ID</label>
+                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Table_Id</label>
+                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                    </div>
+                    <div class="form-group row no-gutters mb-1">
+                        <label class="col-sm-4 text-secondary">Create_Date</label>
+                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light" value="14-Mar-26"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Create</button>
+                <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Edit</button>
+                <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Save</button>
+                <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Delete</button>
+                <button class="btn btn-sm text-white px-2 mr-1" style="background-color: #5b74a3;"><u>S</u>endApproval</button>
+                <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">ECN</button>
+            </div>
+        </form>
+    </div>
+
+    <hr class="my-3" style="border-top: 2px solid #666;">
+
+    <div class="px-2">
+        <h6 class="font-weight-bold">Step 2 : <span class="text-secondary font-weight-normal">Add Part / Material List</span></h6>
+        
+        <div class="d-flex align-items-center mb-2 small">
+            <span class="mr-4">BOM Creation : </span>
+            <span class="mr-5">Table ID : </span>
+            <button class="btn btn-sm text-white mr-1" style="background-color: #5b74a3;">Copy BOM Table</button>
+            <button class="btn btn-sm text-white mr-1" style="background-color: #5b74a3;">New Part</button>
+            <button class="btn btn-sm text-white mr-1" style="background-color: #5b74a3;">Copy BOM Trans</button>
+            <button class="btn btn-sm text-white mr-1" style="background-color: #5b74a3;">Paste BOM Trans</button>
         </div>
 
-        <!-- Customer Name -->
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Enter customer name">
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered mb-2">
+                <thead style="background-color: #e9ecef; font-size: 0.85rem;">
+                    <tr>
+                        <th style="width: 10%;">Entry Type</th>
+                        <th style="width: 10%;">Part_Number</th>
+                        <th style="width: 5%;">Quantity</th>
+                        <th>Description</th>
+                        <th style="width: 10%;">Unit_of_Measure_Code</th>
+                        <th style="width: 10%;">Categorisation</th>
+                        <th style="width: 10%;">Routing_Link_Code</th>
+                        <th style="width: 10%;">Part_Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><select class="form-control form-control-sm border-0"><option></option></select></td>
+                        <td><select class="form-control form-control-sm border-0"><option></option></select></td>
+                        <td><input type="text" class="form-control form-control-sm border-0"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
+                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
+                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
+                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
+                        <td><select class="form-control form-control-sm border-0"><option></option></select></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Search Name -->
-        <div class="form-group">
-          <label for="search_name">Search Name</label>
-          <select id="search_name" name="search_name" class="form-control">
-            <option value="">Select Search Name</option>
-            {% for sname in search_names %}
-              <option value="{{ sname }}">{{ sname }}</option>
-            {% endfor %}
-          </select>
+        <div class="mb-3">
+            <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Add</button>
+            <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Save</button>
+            <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Delete</button>
+            <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Complete</button>
+            <button class="btn btn-sm text-white px-3" style="background-color: #5b74a3;">Download</button>
         </div>
-      </div>
 
-      <div class="card-footer text-right">
-        <button type="submit" class="btn btn-success">Submit</button>
-      </div>
-    </form>
-  </div>
+        <div class="table-responsive border" style="max-height: 300px; overflow-x: auto;">
+            <table class="table table-sm table-bordered text-nowrap mb-0" style="font-size: 0.8rem;">
+                <thead style="background-color: #e9ecef;">
+                    <tr>
+                        <th>Entry Type</th>
+                        <th>Grp Part No</th>
+                        <th>Grp Part Descp.</th>
+                        <th>Part_Number</th>
+                        <th>Quantity</th>
+                        <th>Description</th>
+                        <th>Unit</th>
+                        <th>Categorisation</th>
+                        <th>Routing_Link_Code</th>
+                        <th>Start_Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}
