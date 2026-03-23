@@ -3,7 +3,6 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'item_creation/css/item_creation_form.css' %}">
 {% endblock %}
-
 {% block content %}
 <div class="container-fluid mt-4">
   <div class="card card-primary">
@@ -11,19 +10,18 @@
       <h3 class="card-title mb-0">Item Creation</h3>
       <button type="button" class="btn btn-outline-secondary" id="btn-back">Back</button>
     </div>
-
-
-
     <form method="post" novalidate>
       {% csrf_token %}
       <div class="card-body scrollable-form p-3">
-        <div class="row gx-3">
+      <div class="row gx-3">
           <!-- LEFT COLUMN -->
-          <div class="col-md-4">
-            <div class="form-group mb-2">
-              <label for="lastEcnNo">Last ECN No</label>
-              <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo">
-            </div>
+        <div class="col-md-4">
+        
+           <div class="form-group">
+            <label>Customer ID</label>
+            <input type="text" name="customer_id" class="form-control" value="{{ selected_customer_id }}" readonly>
+           </div>
+            
 
             <div class="form-group mb-2">
               <label for="lastEcnNo">Last ECN No</label>
@@ -31,16 +29,16 @@
             </div>
 
             <div class="form-group mb-2">
-              <label for="lastEcnNo">Customer Name</label>
-              <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo">
+              <label for="customer_name">Customer Name</label>
+              <input type="text" id="customer_name" name="customer_name" class="form-control" value="{{ selected_name }}" readonly>
             </div>
 
             <div class="form-group mb-2">
                 <label for="s_item">Search Item</label>
                 <select id="s_item" name="s_item" class="form-control">
                     <option value="">Select Item</option>
-                    {% for id in customer_ids %}
-                    <option value="{{ id }}">{{ id }}</option>
+                    {% for item in s_item %}
+                    <option value="{{ item }}">{{ item }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -54,8 +52,8 @@
                 <label for="templatename">Template Name</label>
                 <select id="templatename" name="templatename" class="form-control">
                     <option value="">Select Template Name</option>
-                    {% for id in customer_ids %}
-                    <option value="{{ id }}">{{ id }}</option>
+                    {% for t in template_name %}
+                    <option value="{{ t }}">{{ t }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -65,50 +63,61 @@
             </div>
 
             <div class="form-group mb-2">
-                <label for="baseunit">Base Unit Of Measure</label>
-                <select id="baseunit" name="baseunit" class="form-control">
+                <label for="base_unit_of_measure">Base Unit Of Measure</label>
+                <select id="base_unit_of_measure" name="base_unit_of_measure" class="form-control">
                     <option value="">Select Base Unit Of Measure</option>
-                    {% for id in customer_ids %}
-                    <option value="{{ id }}">{{ id }}</option>
+                    {% for unit in base_units %}
+                    <option value="{{ unit }}">{{ unit }}</option>
                     {% endfor %}
                 </select>
             </div>
 
             <div class="form-group mb-2">
-              <label for="shelf">Shelf No</label>
-              <input type="number" class="form-control" id="shelf" name="shelf">
+              <label for="shelf_no">Shelf No</label>
+              <input type="number" class="form-control" id="shelf_no" name="shelf_no">
             </div>
 
             <div class="form-group mb-2">
                 <label for="cell">Cell</label>
                 <select id="cell" name="cell" class="form-control">
                     <option value="">Select Cell</option>
-                    {% for id in customer_ids %}
-                    <option value="{{ id }}">{{ id }}</option>
+                    {% for cell in cell %}
+                    <option value="{{ cell }}">{{ cell }}</option>
                     {% endfor %}
                 </select>
             </div>
 
             <div class="form-group mb-2">
-                <label for="cellt">Cell Type</label>
-                <select id="cellt" name="cellt" class="form-control">
+                <label for="cell_type">Cell Type</label>
+                <select id="cell_type" name="cell_type" class="form-control">
                     <option value="">Select Cell Type</option>
-                    {% for id in customer_ids %}
+                    {% for type in cell_types %}
                     <option value="{{ id }}">{{ id }}</option>
                     {% endfor %}
                 </select>
             </div>
 
             <div class="form-group mb-2">
-                <label for="itemCategoryCode">Item Category Code</label>
-                <select id="itemCategoryCode" name="itemCategoryCode" class="form-control">
+                <label for="item_category_code">Item Category Code</label>
+                <select id="item_category_code" name="item_category_code" class="form-control">
                     <option value="">Select Item Category Code</option>
-                    {% for id in customer_ids %}
-                    <option value="{{ id }}">{{ id }}</option>
+                    {% for id in item_category_codes %}
+                    <option value="{{ code }}">{{ code }}</option>
                     {% endfor %}
                 </select>
             </div>
-          </div>
+
+            <div class="form-group mb-2">
+                <label for="product_group_code">Product Group Code</label>
+                <select id="product_group_code" name="product_group_code" class="form-control">
+                    <option value="">Select Product Group Code</option>
+                    {% for id in product_group_codes %}
+                    <option value="{{ code }}">{{ code }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
 
           <!-- MIDDLE COLUMN -->
           <div class="col-md-4">
@@ -117,8 +126,8 @@
                 <label for="status">Status</label>
                 <select id="status" name="status" class="form-control">
                     <option value="">Select Status</option>
-                    {% for id in customer_ids %}
-                    <option value="{{ id }}">{{ id }}</option>
+                    {% for id in statuses %}
+                    <option value="{{ s }}">{{ s }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -139,12 +148,6 @@
               <input type="text" class="form-control" id="noofparts" name="noofparts">
             </div>
 
-
-            <div class="form-group mb-2">
-              <label for="custName">Customer Name</label>
-              <input type="text" class="form-control" id="custName" name="custName">
-            </div>
-
             <div class="form-group mb-2">
               <label for="revision">Revision No</label>
               <input type="number" class="form-control" id="revision" name="revision">
@@ -159,8 +162,8 @@
                 <label for="hsn">HSN/SAC Code</label>
                 <select id="hsn" name="hsn" class="form-control">
                     <option value="">Select HSN/SAC Code</option>
-                    {% for id in customer_ids %}
-                    <option value="{{ id }}">{{ id }}</option>
+                    {% for h in hsn_codes %}
+                    <option value="{{ h }}">{{ h }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -233,23 +236,23 @@
               <input type="text" class="form-control" id="flushing" name="flushing">
             </div>
 
-             <div class="form-group mb-2">
-              <label for="template">Template Applied</label>
-              <input type="text" class="form-control" id="template" name="template">
+            <div class="form-group mb-2">
+              <label for="template_applied">Template Applied</label>
+              <input type="text" class="form-control" id="template_applied" name="template_applied">
             </div>
 
-             <div class="form-group mb-2">
+            <div class="form-group mb-2">
               <label for="rounding">Rounding Precision</label>
               <input type="text" class="form-control" id="rounding" name="rounding">
             </div>
 
-             <div class="form-group mb-2">
+            <div class="form-group mb-2">
               <label for="gstgroup">GST Group Code</label>
               <input type="text" class="form-control" id="gstgroup" name="gstgroup">
             </div>
 
           </div>
-        </div>
+      </div>
       </div>
 
       <div class="card-footer text-right">
@@ -264,8 +267,29 @@
 </div>
 
 <script>
-  document.getElementById('btn-back')?.addEventListener('click', function() {
-    window.history.back();
-  });
+document.getElementById("templatename").addEventListener("change", function() {
+    const template = this.value;
+
+    fetch(`/get_template_data/?template_name=${template}`)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("item_category_code").value = data.item_category_code || "";
+        document.getElementById("costingmethod").value = data.costing_method || "";
+        document.getElementById("inventory").value = data.inventory_posting_group || "";
+        document.getElementById("priceprofit").value = data.price_profit_calculation || "";
+        document.getElementById("genpro").value = data.gen_prod_posting_group || "";
+        document.getElementById("replenishment").value = data.replenishment_system || "";
+        document.getElementById("qc").value = data.qc_applicable || "";
+        document.getElementById("manu").value = data.manufacturing_policy || "";
+        document.getElementById("assembly").value = data.assembly_policy || "";
+        document.getElementById("reordering").value = data.reordering_policy || "";
+        document.getElementById("inventoryinclude").value = data.include_inventory || "";
+        document.getElementById("gst").value = data.gst_credit || "";
+        document.getElementById("flushing").value = data.flushing_method || "";
+        document.getElementById("template_applied").value = data.template_applied || "";
+        document.getElementById("rounding").value = data.rounding_precision || "";
+        document.getElementById("gstgroup").value = data.gst_group_code || "";
+    });
+});
 </script>
 {% endblock %}

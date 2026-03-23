@@ -46,4 +46,46 @@
     </form>
   </div>
 </div>
+<script>
+console.log("Script loaded");
+document.addEventListener("DOMContentLoaded", function() {
+    const customerSelect = document.getElementById("customer_id");
+    customerSelect.addEventListener("change", function() {
+        const selectedId = this.value;
+        console.log("Customer ID changed:", selectedId);  // debug log
+
+        if (selectedId) {
+            fetch("{% url 'get_customer_info' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "customer_id=" + encodeURIComponent(selectedId)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Returned search_name:", data.search_name);
+
+                if (data.name) {
+                    document.getElementById("name").value = data.name;
+                }
+                if (data.search_name) {
+                    const searchDropdown = document.getElementById("search_name");
+                    const returnedValue = data.search_name.trim().toLowerCase();
+                    for (let i = 0; i < searchDropdown.options.length; i++) {
+                        const optionValue = searchDropdown.options[i].value.trim().toLowerCase();
+                        console.log("Comparing option:", optionValue); // debug log
+                        if (optionValue === returnedValue) {
+                            searchDropdown.selectedIndex = i;
+                            console.log("Match found at index:", i); // debug log
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
 {% endblock %}
