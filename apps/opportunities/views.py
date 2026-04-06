@@ -6,10 +6,12 @@ from .models import CustomerInfo, OppSalesPeople, OppSalesCycles, OppSegment, Op
 from django.utils.timezone import now
 from django.db.models import Max
 
+from django.shortcuts import render, redirect  # Add redirect to your imports
 
-
-# ✅ existing view (keep as it is)
 def opportunity_creation(request):
+    # 1. Extract values from the URL (the ?customer_id=... part)
+    customer_id = request.GET.get('customer_id', '')
+    customer_name = request.GET.get('name', '')
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -28,8 +30,10 @@ def opportunity_creation(request):
                 status=request.POST.get('status'),
                 remarks=request.POST.get('remarks'),
             )
-            return redirect(request.path)
+            # Use redirect to refresh the page after saving
+            return redirect(request.path + f"?customer_id={customer_id}&name={customer_name}")
 
+    # 2. Now these variables are defined and can be passed to the template
     return render(request, "opportunities/opportunity_creation.html", {
         "selected_customer_id": customer_id,
         "selected_customer_name": customer_name,
