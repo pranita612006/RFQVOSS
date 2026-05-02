@@ -1,22 +1,15 @@
-"""core URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import include, path
+from apps.pages import views as page_views   # ✅ IMPORTANT
 
 urlpatterns = [
+
+    # ✅ DASHBOARD URLS (PUT AT TOP — VERY IMPORTANT)
+    path('dashboard/v1/', page_views.dashboard_v1, name='dashboard_v1'),
+    path('dashboard/v2/', page_views.dashboard_v2, name='dashboard_v2'),
+    path('dashboard/v3/', page_views.dashboard_v3, name='dashboard_v3'),
+
+    # EXISTING
     path("", include("apps.opportunities.urls")), 
     path('', include('apps.pages.urls')),
     path('', include('apps.dyn_dt.urls')),
@@ -35,6 +28,4 @@ urlpatterns = [
     path("", include("apps.BlanketSales.urls")),
     path("", include("apps.ApproveRec.urls")),
     path("", include("apps.Report.urls")),
-
 ]
-

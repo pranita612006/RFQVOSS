@@ -1,89 +1,158 @@
 {% load static %}
-<style>
-    .voss-btn {
-        background-color: #6c7a89;
-        color: white !important;
-        border: 1px solid #4a5561;
-        border-radius: 4px;
-        margin-bottom: 5px;
-        text-align: center;
-        padding: 8px 5px;
-        display: block;
-        width: 100%;
-        font-size: 13px;
-        transition: background 0.3s;
-    }
-    .voss-btn:hover {
-        background-color: #515e6b;
-        text-decoration: none;
-    }
-    .nav-sidebar {
-        padding: 10px;
-    }
-    .voss-btn-alt {
-        background-color: #5d6d7e !important;
-    }
 
-    /* Feasibility Form Styling */
-    .feas-header {
-        background-color: #5d6d7e;
-        color: white;
-        padding: 4px 12px;
-        font-weight: bold;
-        font-size: 12px;
-        margin-top: 10px;
-    }
-    .feas-row {
-        background-color: #fff;
-        border-bottom: 1px solid #dee2e6;
-        padding: 5px 0;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        font-size: 11px;
-    }
-    .feas-label { color: #333; line-height: 1.2; }
-    .modal-xl { max-width: 95%; }
+<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
 
-    /* Item Creation Specific Styles */
-    .item-creation-container { background: #f0f2f5; padding: 15px; border-radius: 4px; }
-    .item-col { background: #fff; border: 1px solid #ced4da; padding: 10px; height: 100%; }
-    .item-label { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; display: block; }
-    .item-table-head { background-color: #212529; color: white; font-size: 11px; }
-    .item-table-body { font-size: 11px; background: white; }
-    .btn-voss-action { font-size: 12px; padding: 2px 12px; border-radius: 2px; margin-right: 4px; color: white; border: none; }
+    <!-- DASHBOARD -->
+    <li class="nav-item has-treeview">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+                Dashboard
+                <i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
 
-    /* BOC Specific Styles */
-    .boc-step-title { font-weight: bold; font-size: 14px; margin: 10px 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-    .boc-table thead { background-color: #f8f9fa; font-size: 11px; }
-    .nav-tabs-custom .nav-link { font-size: 11px; background: #e9ecef; margin-right: 2px; border: 1px solid #ced4da; color: #333; }
-    .nav-tabs-custom .nav-link.active { background: #fff !important; border-bottom: 1px solid transparent !important; }
-</style>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{% url 'dashboard_v1' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v1</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'dashboard_v2' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v2</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'dashboard_v3' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v3</p>
+                </a>
+            </li>
+        </ul>
+    </li>
 
-<ul class="nav nav-pills nav-sidebar flex-column" role="menu">
-    <li class="mb-3">
-        <a href="{% url 'dashboardv3' %}" class="voss-btn voss-btn-alt">
-            <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+    <!-- OTHER MENU ITEMS -->
+    <li class="nav-item">
+        <a href="{% url 'customer_creation' %}" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>Customer Selection</p>
         </a>
     </li>
 
-    <hr style="border-top: 1px solid #4b545c; width: 100%; margin-top: 0; margin-bottom: 10px;">
-    <li><a href="{% url 'customer_creation' %}" class="voss-btn">Customer Selection</a></li>
-    <li><a href="{% url 'item_creation' %}" class="voss-btn">Item Creation</a></li>
-    <li><a href="{% url 'opportunity_creation' %}" class="voss-btn">Opportunity Creation</a></li>
-    <li><a href="{% url 'feasibility_form' %}" class="voss-btn">Feasibility Form</a></li>
-    <li><a href="{% url 'BOM' %}" class="voss-btn">BOM Creation</a></li>
-    <li><a href="{% url 'BOP' %}" class="voss-btn">BOP Creation</a></li>
-    <li><a href="{% url 'BOC' %}" class="voss-btn">BOC Creation</a></li>
-    <li><a href="{% url 'CostingBCCal' %}" class="voss-btn">Costing & BC Calculations</a></li>
-    <li><a href="{% url 'BlanketSales' %}" class="voss-btn">Blanket Sales Order</a></li>
-    <li><a href="{% url 'ApproveRec' %}" class="voss-btn">Approve Record</a></li>
-    <li><a href="{% url 'Report' %}" class="voss-btn">Report</a></li>
-    <li><a href="{% url 'todo' %}" class="voss-btn">To‑Do List</a></li>
-    <li><a href="{% url 'erp_data' %}" class="voss-btn">ERP Data</a></li>
-    <li><a href="{% url 'upload_data' %}" class="voss-btn">Upload Data</a></li>
-    <li><a href="{% url 'user_management' %}" class="voss-btn">User Management</a></li>
-    
-    <li class="mt-4"><a href="{% url 'register' %}" class="voss-btn voss-btn-alt">Register</a></li>
-    <li><a href="{% url 'admin:logout' %}" class="voss-btn" style="background-color: #dc3545;">Logout</a></li>
+    <li class="nav-item">
+        <a href="{% url 'item_creation' %}" class="nav-link">
+            <i class="nav-icon fas fa-box"></i>
+            <p>Item Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'opportunity_creation' %}" class="nav-link">
+            <i class="nav-icon fas fa-lightbulb"></i>
+            <p>Opportunity Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'feasibility_form' %}" class="nav-link">
+            <i class="nav-icon fas fa-file-alt"></i>
+            <p>Feasibility Form</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'BOM' %}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>BOM Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'BOP' %}" class="nav-link">
+            <i class="nav-icon fas fa-industry"></i>
+            <p>BOP Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'BOC' %}" class="nav-link">
+            <i class="nav-icon fas fa-project-diagram"></i>
+            <p>BOC Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'CostingBCCal' %}" class="nav-link">
+            <i class="nav-icon fas fa-calculator"></i>
+            <p>Costing & BC Calculations</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'BlanketSales' %}" class="nav-link">
+            <i class="nav-icon fas fa-file-invoice"></i>
+            <p>Blanket Sales Order</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'ApproveRec' %}" class="nav-link">
+            <i class="nav-icon fas fa-check"></i>
+            <p>Approve Record</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'Report' %}" class="nav-link">
+            <i class="nav-icon fas fa-chart-bar"></i>
+            <p>Report</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'todo' %}" class="nav-link">
+            <i class="nav-icon fas fa-tasks"></i>
+            <p>To-Do List</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'erp_data' %}" class="nav-link">
+            <i class="nav-icon fas fa-database"></i>
+            <p>ERP Data</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'upload_data' %}" class="nav-link">
+            <i class="nav-icon fas fa-upload"></i>
+            <p>Upload Data</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'user_management' %}" class="nav-link">
+            <i class="nav-icon fas fa-user-cog"></i>
+            <p>User Management</p>
+        </a>
+    </li>
+
+    <!-- BOTTOM -->
+    <li class="nav-item mt-3">
+        <a href="{% url 'register' %}" class="nav-link">
+            <i class="nav-icon fas fa-user-plus"></i>
+            <p>Register</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'admin:logout' %}" class="nav-link text-danger">
+            <i class="nav-icon fas fa-sign-out-alt"></i>
+            <p>Logout</p>
+        </a>
+    </li>
+
 </ul>
