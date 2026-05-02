@@ -1,5 +1,7 @@
 {% extends "layouts/base.html" %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
 <div class="container-fluid full-dashboard">
   <h2>Feasibility Form</h2>
 
@@ -9,21 +11,30 @@
       <h3 class="card-title mb-0">Initial Details</h3>
     </div>
 
-    <form method="post" novalidate>
+    <form id="feasibilityForm" method="post" novalidate>
       {% csrf_token %}
       <div class="card-body scrollable-form p-3">
+        <div class="form-group">
+    <label for="customer_id">Customer ID</label>
+    <select id="customer_id" name="customer_id" class="form-control">
+        <option value="">-- Select Customer --</option>
+        {% for cust in customers %}
+        <option value="{{ cust.customer_id }}" {% if cust.customer_id == selected_customer_id %}selected{% endif %}>{{ cust.customer_id }} - {{ cust.customer_name }}</option>
+        {% endfor %}
+    </select>
+    </div>
         <div class="row gx-3">
           <!-- LEFT COLUMN -->
           <div class="col-md-4">
             <div class="form-group">
-              <label for="itemNo">Item No.</label>
-              <select id="itemNo" name="itemNo" class="form-control">
-              <option value="">Select Type</option>
-               {% for ft in itemNo %}
-              <option value="{{ ft }}">{{ ft }}</option>
-               {% endfor %}
-              </select>
-            </div>
+    <label for="itemNo">Item No.</label>
+    <input type="text" id="itemNo" name="itemNo" list="itemNoList" class="form-control" placeholder="-- Enter or Select Item --" autocomplete="off">
+    <datalist id="itemNoList">
+        {% for item in itemNo %}
+            <option value="{{ item }}"></option>
+        {% endfor %}
+    </datalist>
+</div>
 
             <div class="form-group mb-2">
               <label for="customer_name">Customer Name</label>
@@ -52,9 +63,9 @@
               <label for="feasibility_type">Feasibility Type</label>
               <select id="feasibility_type" name="feasibility_type" class="form-control">
               <option value="">Select Type</option>
-               {% for ft in feasibility_types %}
-              <option value="{{ ft }}">{{ ft }}</option>
-               {% endfor %}
+              <option value="Complex Projects">Complex Projects</option>
+              <option value="Normal Projects">Normal Projects</option>
+              <option value="Simple Projects">Simple Projects</option>
               </select>
             </div>
 
@@ -65,12 +76,12 @@
 
             <div class="form-group mb-2">
               <label for="initial_date">Initial Date</label>
-              <input type="number" class="form-control" id="initial_date" name="initial_date">
+              <input type="text" class="form-control" id="initial_date" name="initial_date">
             </div>
 
             <div class="form-group">
               <label for="updated_on">Updated On</label>
-              <input type="date" id="updated_on" name="updated_on" class="form-control">
+              <input type="text" id="updated_on" name="updated_on" class="form-control">
             </div>
 
             <div class="form-group">
@@ -98,19 +109,18 @@
 
             <div class="form-group">
               <label for="sop_date">Date of SOP</label>
-              <input type="date" id="sop_date" name="sop_date" class="form-control">
+              <input type="text" id="sop_date" name="sop_date" class="form-control">
             </div>
           </div>
         </div>
       </div>
-    </form>
+    
   </div>
   </div>
 
 
   <div class="card card-primary mt-3">
-    <form method="post">
-      {% csrf_token %}
+    
       <div class="card-body">
         <!-- Checklist Section -->
         <h5 class="mt-4">Feasibility Checklist</h5>
@@ -122,11 +132,11 @@
             <div class="col-md-3">
               <select name="questionnaire_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
@@ -135,8 +145,12 @@
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
@@ -152,28 +166,32 @@
           <label>II. Does VAIPL possess the technology and engineering capabilities to undertake this project</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="project_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="project_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="project_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -184,28 +202,32 @@
           <label>1. Availability of tubing raw material at Voss.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="Voss_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="Voss_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="Voss_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -215,28 +237,32 @@
           <label>2.Sourcing of raw material for B/O parts.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="parts_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="parts_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="parts_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -246,28 +272,32 @@
           <label>3. Availability of raw material specification or Stds at Voss.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="stds_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="stds_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="stds_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -277,28 +307,32 @@
           <label>3(A). Is there any customer designated source for RM / BOC (If Yes… answer below question 3(A-1)).</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="source_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="source_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="source_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -308,28 +342,32 @@
           <label>3(A-1). Are product safety related characteristics communicated to Materials.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="safety_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="safety_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="safety_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -339,28 +377,32 @@
           <label>3(B). Statutory regulatory requirements – (applicable for Export Requirement only).</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="export_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="export_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="export_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -370,28 +412,32 @@
           <label>3(B-1). Country of receipt.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="receipt_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="receipt_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="receipt_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -401,28 +447,32 @@
           <label>3(B-2). Country of shipment.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="shipment_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="shipment_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="shipment_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -432,28 +482,32 @@
           <label>3(B-3). Customer identified country of destination.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="dest_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="dest_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="dest_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -463,28 +517,32 @@
           <label>3(C). If 3(B) is applicable – Communication to HR for addition in legal register..</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="legal_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="legal_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="legal_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -494,28 +552,32 @@
           <label>4. Feasibility of conducting tests specified in the project.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="test_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="test_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="test_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -526,28 +588,32 @@
           <label>1. Availability of inputs required for developing the product in the drawing / RFQ / Specs.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="b_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="b_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="b_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -557,28 +623,32 @@
           <label>2. Availability of SC / CC on the drawing.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="bsc_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="bsc_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="bsc_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -588,28 +658,32 @@
           <label>3. Availability of information / data for sourcing B/O or developing child parts from local sources.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
-                <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+              <select name="data_status" class="form-control">
+               <option value="">Feasibility</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="data_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="data_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -619,28 +693,32 @@
           <label>4. Feasibility of achieving the specified surface finish / painting / coatings for B/O components.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="surface_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="surface_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="surface_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -650,28 +728,32 @@
           <label>5. Feasibility of conducting functional tests specified on the drawing / RFQ and availability of test standards, test methods.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="method_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="method_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="method_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -682,28 +764,32 @@
           <label>1. Feasibility of achieving the product tolerances / SC / CC.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
-                <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+              <select name="c1_status" class="form-control">
+               <option value="">Feasibility</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="c1_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="c1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -713,28 +799,32 @@
           <label>2. Achievability of CP / CPK > 1.67 wherever SC / CC characteristics are specified.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
-                <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+              <select name="c2_status" class="form-control">
+               <option value="">Feasibility</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="c2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="c2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -744,28 +834,32 @@
           <label>3. Any new processing facility required.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="c3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="c3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="c3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -775,28 +869,32 @@
           <label>4. Requirement of any special Jigs / Fixtures / Tools / Moulds.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="c4_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="c4_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="c4_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -806,28 +904,32 @@
           <label>5. Manufacturing feasibility of Jigs / Fixtures / Tools / Moulds required in the project.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="c5_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="c5_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="c5_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -838,28 +940,32 @@
           <label>1. Former Mfg. Capacity.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="d1_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="d1_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="d1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -869,28 +975,32 @@
           <label>2. Chk. / Bundle Fix. Mfg. Capacity.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="d2_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="d2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="d2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -900,28 +1010,32 @@
           <label>3. Forming Capacity.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="d3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="d3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="d3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -931,28 +1045,32 @@
           <label>4. Production Capacity (Cell, Manpower, Space, etc.).</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="d4_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="d4_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="d4_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -962,28 +1080,32 @@
           <label>5. B/O, Part sourcing – Supplier Capacity.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="d5_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="d5_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="d5_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -994,28 +1116,32 @@
           <label>1. Feasibility of checking SC / CC / Functional / Critical dimensions.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="e1_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="e1_responsible" class="form-control">    
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="e1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1025,28 +1151,32 @@
           <label>2. Any Special Inspection equipment needed (Example – CMM etc.).</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="e2_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="e2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="e2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1056,28 +1186,32 @@
           <label>3. List the dimensions associated with SC / CC as mentioned on drawing apart from internally decided – Final part BOC.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="e3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="e3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="e3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1088,28 +1222,32 @@
           <label>1. Requirement of Functional / Endurance / Life Tests.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="f1_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="f1_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="f1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1119,28 +1257,32 @@
           <label>2. Are DVP tests required?</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="f2_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="f2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="f2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1150,28 +1292,32 @@
           <label>3. Identify sources for conducting tests as per DVP.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="f3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="f3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="f3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1182,28 +1328,32 @@
           <label>1. Feasibility of achieving any customer specific requirements (Packing, Logistics, etc.)</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="g1_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="g1_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="g1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1213,28 +1363,32 @@
           <label>2. Requirement of customer regarding operating safety file</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="g2_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="g2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="g2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1244,28 +1398,32 @@
           <label>3. Need identification / updating skill matrix pertaining to customer specific requirement.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="g3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="g3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="g3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1276,28 +1434,32 @@
           <label>1. Availability of existing projects very similar to the current project.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="h1_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="h1_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="h1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1307,28 +1469,32 @@
           <label>2. Reference of TGR / TGW / G8D / Complaint action tracker of similar projects to carryover the learnings to current projects.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="h2_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="h2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="h2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1338,28 +1504,32 @@
           <label>3. Refer PROJECT GUIDELINES \Mgidcsrv01\quality\Quality Management System\06 Onsite Operating Instructions\PROJECT.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="h3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="h3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="h3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1370,28 +1540,32 @@
           <label>1. Is Aspect Impact Study required?</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="i1_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="i1_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="i1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1401,28 +1575,32 @@
           <label>2. If Yes, Are there Significant Aspect?</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="i2_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="i2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="i2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1432,28 +1610,32 @@
           <label>3. If Yes, What is the control of Significant Aspects?</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="i3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="i3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="i3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1463,28 +1645,32 @@
           <label>4. Is there any additional Legal requirements other than earlier identified</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
-                <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+              <select name="i4_status" class="form-control">
+               <option value="">Feasibility</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="i4_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="i4_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1494,28 +1680,32 @@
           <label>5. Compliance to Legal requirements other than earlier identified.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="i5_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="i5_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="i5_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1525,28 +1715,32 @@
           <label>6. Availability of MSDS (if required).</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="i6_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="i6_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="i6_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1556,28 +1750,32 @@
           <label>7. Any specific requirement related to EMS / OH&S.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="i7_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="i7_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="i7_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1588,28 +1786,33 @@
           <label>1. Product can be produced as specified with no revision.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
-                <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+              <select name="final1_status" class="form-control">
+               <option value="">Feasibility</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="final1_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="OK">OK</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="final1_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1619,28 +1822,32 @@
           <label>2. Changes recommended (see attached).</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="final2_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="final2_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="final2_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1650,28 +1857,32 @@
           <label>3. Design revision required to produce within the specified requirements.</label>
           <div class="row">
             <div class="col-md-3">
-              <select name="questionnaire_status" class="form-control">
+              <select name="final3_status" class="form-control">
                 <option value="">Feasibility</option>
-                <option value="Feasible">Ok</option>
-                <option value="Not Feasible">Not Ok</option>
-                <option value="Feasible">Yes</option>
-                <option value="Not Feasible">No</option>
-                <option value="Not Feasible">NA</option>
+                <option value="OK">OK</option>
+                <option value="Not_Ok">Not_Ok</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="NA">NA</option>
               </select>
             </div>
 
             <div class="col-md-3">
-              <select name="questionnaire_responsible" class="form-control">
+              <select name="final3_responsible" class="form-control">
                 <option value="">Responsible</option>
                 <option value="Marketing">Marketing</option>
                 <option value="PM/PE">PM/PE</option>
-                <option value="Material">Material</option>
+                <option value="Material">Material</option><option value="Materials">Materials</option>
                 <option value="Design Quality">Design Quality</option>
+                <option value="PE">PE</option>
+                <option value="PM">PM</option>
+                <option value="ME">ME</option>
+                <option value="ME/PE">ME/PE</option>
               </select>
             </div>
 
             <div class="col-md-6">
-              <input type="text" name="questionnaire_comments" class="form-control" placeholder="Comments">
+              <input type="text" name="final3_comments" class="form-control" placeholder="Comments">
             </div>
 
           </div>
@@ -1758,7 +1969,7 @@
           </td>
 
           <td>
-            <button type="button" class="btn btn-primary btn-sm" style="background-color: #5b74a3;">Edit</button>
+            <button type="button" id="editBtn" class="btn btn-primary btn-sm" style="background-color: #5b74a3;">Edit</button>
           </td>
         </tr>
 
@@ -1766,15 +1977,15 @@
         <tr>
           <td><b>Date</b></td>
 
-          <td><input type="date" name="marketing_date" class="form-control"></td>
-          <td><input type="date" name="materials_date" class="form-control"></td>
-          <td><input type="date" name="quality_date" class="form-control"></td>
-          <td><input type="date" name="pe_date" class="form-control"></td>
-          <td><input type="date" name="me_date" class="form-control"></td>
-          <td><input type="date" name="pm_date" class="form-control"></td>
+          <td><input type="text" id="marketing_date" name="marketing_date" class="form-control"></td>
+          <td><input type="text" id="material_date" name="material_date" class="form-control"></td>
+          <td><input type="text" id="quality_date" name="quality_date" class="form-control"></td>
+          <td><input type="text" id="pe_date" name="pe_date" class="form-control"></td>
+          <td><input type="text" id="me_date" name="me_date" class="form-control"></td>
+          <td><input type="text" id="pm_date" name="pm_date" class="form-control"></td>
 
           <td>
-            <button type="button" class="btn btn-success btn-sm" style="background-color: #5b74a3;">Create</button>
+            <button type="submit" class="btn btn-success btn-sm" style="background-color: #5b74a3;" id="middleCreateBtn">Create</button>
           </td>
 
           <td>
@@ -1787,19 +1998,482 @@
   </div>
 </div>
 
-    </form>
+   
   </div>
 
       <div class="card-footer text-right">
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success" id="saveBtn">Save</button>
+        
       </div>
     </form>
   </div>
+  
+  <!-- Inserted Records Table -->
+  <div class="card card-primary mt-4">
+    <div class="card-header">
+      <h3 class="card-title mb-0">Existing Feasibility Records</h3>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="recordsTable">
+          <thead>
+            <tr>
+              <th>Item No</th>
+              <th>Customer Name</th>
+              <th>Part Name</th>
+              <th>Feasibility Type</th>
+              <th>Feasibility No</th>
+              <th>Updated On</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rec in records %}
+            <tr id="row-{{ rec.item_no }}">
+              <td>{{ rec.item_no|default_if_none:"" }}</td>
+              <td>{{ rec.customer_name|default_if_none:"" }}</td>
+              <td>{{ rec.part_name|default_if_none:"" }}</td>
+              <td>{{ rec.feasibility_type|default_if_none:"" }}</td>
+              <td>{{ rec.feasibility_no|default_if_none:"" }}</td>
+              <td>{{ rec.updated_on|date:"Y-m-d"|default_if_none:"" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
 <script>
-  document.getElementById('btn-back')?.addEventListener('click', function() {
-    window.history.back();
-  });
+document.addEventListener("DOMContentLoaded", function () {
+    const itemDropdown = document.getElementById("itemNo");
+    const customerInput = document.getElementById("customer_id");
+    const feasibilityForm = document.getElementById('feasibilityForm');
+
+function toggleFormFields(isEditable) {
+    // Select every single input, select, and textarea in the whole document
+    const formElements = document.querySelectorAll('input, select, textarea');
+    const editBtn = document.getElementById('editBtn');
+
+    formElements.forEach(el => {
+        // Skip the Item No dropdown and Customer ID so you can always switch items
+        if (el.id === 'itemNo' || el.id === 'customer_id' || el.type === 'hidden') {
+            return; 
+        }
+
+        // Handle Select/Dropdowns
+        if (el.tagName === 'SELECT') {
+            el.disabled = !isEditable;
+        } 
+        // Handle Input and Textareas
+        else {
+            el.readOnly = !isEditable;
+        }
+    });
+
+    if (editBtn) {
+            editBtn.textContent = isEditable ? "Lock Fields" : "Edit Data";
+            editBtn.className = isEditable ? "btn btn-success" : "btn btn-warning";
+        }
+}
+
+document.getElementById('editBtn')?.addEventListener('click', function() {
+    // Determine if we should unlock or lock based on current button text
+    const shouldUnlock = (this.textContent.trim() === "Edit Data");
+    toggleFormFields(shouldUnlock); 
+});
+
+document.getElementById('customer_id').addEventListener('change', function() {
+    const custId = this.value;
+    fetch(`/feasibility/list/?customer_id=${custId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Update Table
+                const tbody = document.querySelector('#recordsTable tbody');
+                if (tbody) {
+                    tbody.innerHTML = '';
+                    data.records.forEach(rec => {
+                        const tr = document.createElement('tr');
+                        tr.id = `row-${rec.item_no}`;
+                        tr.innerHTML = `
+                            <td>${rec.item_no || ''}</td>
+                            <td>${rec.customer_name || ''}</td>
+                            <td>${rec.part_name || ''}</td>
+                            <td>${rec.feasibility_type || ''}</td>
+                            <td>${rec.feasibility_no || ''}</td>
+                            <td>${rec.updated_on || ''}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // Update Item No list
+                const itemList = document.getElementById('itemNoList');
+                if (itemList) {
+                    itemList.innerHTML = '';
+                    data.items.forEach(item => {
+                        const opt = document.createElement('option');
+                        opt.value = item;
+                        itemList.appendChild(opt);
+                    });
+                }
+
+                // Also update customer_name
+                const custNameEl = document.getElementById('customer_name');
+                if (custNameEl) {
+                    custNameEl.value = data.customer_name || '';
+                }
+            } else {
+                console.error("Failed to fetch filtered list", data.message);
+            }
+        });
+});
+
+$('#itemNo').on("change", function() {
+    let itemNo = $(this).val();
+
+    fetch(`/get_opportunity_data/?item_no=${itemNo}`)
+    .then(response => response.json())
+    .then(res => {
+        if(res.status === "success") {
+            let data = res.data;
+
+            document.getElementById("customer_name").value = data.customer_name || "";
+            document.getElementById("enqNo").value = data.enqNo || "";
+            document.getElementById("part_name").value = data.part_name || "";
+            document.getElementById("application").value = data.application || "";
+            document.getElementById("feasibility_type").value = data.feasibility_type || "";
+            document.getElementById("projected_volume").value = data.projected_volume || "";
+            document.getElementById("initial_date").value = data.initial_date || "";
+            document.getElementById("updated_on").value = data.updated_on || "";
+            document.getElementById("part_no").value = data.part_no || "";
+            document.getElementById("feasibility_no").value = data.feasibility_no || "";
+            document.getElementById("vehicle_model").value = data.vehicle_model || "";
+            document.getElementById("daily_peak").value = data.daily_peak || "";
+            document.getElementById("sop_date").value = data.sop_date || "";
+           
+
+           
+    // autofill fields
+    document.querySelector("[name='questionnaire_status']").value = data.questionnaire_status || "";
+    document.querySelector("[name='questionnaire_responsible']").value = data.questionnaire_responsible || "";
+    document.querySelector("[name='questionnaire_comments']").value = data.questionnaire_comments || "";
+
+    document.querySelector("[name='project_status']").value = data.project_status || "";
+    document.querySelector("[name='project_responsible']").value = data.project_responsible || "";
+    document.querySelector("[name='project_comments']").value = data.project_comments || "";
+
+    document.querySelector("[name='Voss_status']").value = data.Voss_status || "";
+    document.querySelector("[name='Voss_responsible']").value = data.Voss_responsible || "";
+    document.querySelector("[name='Voss_comments']").value = data.Voss_comments || "";
+
+    document.querySelector("[name='parts_status']").value = data.parts_status || "";
+    document.querySelector("[name='parts_responsible']").value = data.parts_responsible || "";
+    document.querySelector("[name='parts_comments']").value = data.parts_comments || "";
+
+    document.querySelector("[name='stds_status']").value = data.stds_status || "";
+    document.querySelector("[name='stds_responsible']").value = data.stds_responsible || "";
+    document.querySelector("[name='stds_comments']").value = data.stds_comments || "";
+    
+    document.querySelector("[name='source_status']").value = data.source_status || "";
+    document.querySelector("[name='source_responsible']").value = data.source_responsible || "";
+    document.querySelector("[name='source_comments']").value = data.source_comments || "";
+
+    document.querySelector("[name='safety_status']").value = data.safety_status || "";
+    document.querySelector("[name='safety_responsible']").value = data.safety_responsible || "";
+    document.querySelector("[name='safety_comments']").value = data.safety_comments || "";
+
+    document.querySelector("[name='export_status']").value = data.export_status || "";
+    document.querySelector("[name='export_responsible']").value = data.export_responsible || "";
+    document.querySelector("[name='export_comments']").value = data.export_comments || "";
+
+    document.querySelector("[name='receipt_status']").value = data.receipt_status || "";
+    document.querySelector("[name='receipt_responsible']").value = data.receipt_responsible || "";
+    document.querySelector("[name='receipt_comments']").value = data.receipt_comments || "";
+
+    document.querySelector("[name='shipment_status']").value = data.shipment_status || "";
+    document.querySelector("[name='shipment_responsible']").value = data.shipment_responsible || "";
+    document.querySelector("[name='shipment_comments']").value = data.shipment_comments || "";
+
+    document.querySelector("[name='dest_status']").value = data.dest_status || "";
+    document.querySelector("[name='dest_responsible']").value = data.dest_responsible || "";
+    document.querySelector("[name='dest_comments']").value = data.dest_comments || "";
+
+    document.querySelector("[name='legal_status']").value = data.legal_status || "";
+    document.querySelector("[name='legal_responsible']").value = data.legal_responsible || "";
+    document.querySelector("[name='legal_comments']").value = data.legal_comments || "";
+
+    document.querySelector("[name='test_status']").value = data.test_status || "";
+    document.querySelector("[name='Voss_responsible']").value = data.test_responsible || "";
+    document.querySelector("[name='test_comments']").value = data.test_comments || "";
+
+    document.querySelector("[name='b_status']").value = data.b_status || "";
+    document.querySelector("[name='b_responsible']").value = data.b_responsible || "";
+    document.querySelector("[name='b_comments']").value = data.b_comments || "";
+
+    document.querySelector("[name='bsc_status']").value = data.bsc_status || "";
+    document.querySelector("[name='bsc_responsible']").value = data.bsc_responsible || "";
+    document.querySelector("[name='bsc_comments']").value = data.bsc_comments || "";
+    
+    document.querySelector("[name='data_status']").value = data.data_status || "";
+    document.querySelector("[name='data_responsible']").value = data.data_responsible || "";
+    document.querySelector("[name='data_comments']").value = data.data_comments || "";
+
+    document.querySelector("[name='surface_status']").value = data.surface_status || "";
+    document.querySelector("[name='surface_responsible']").value = data.surface_responsible || "";
+    document.querySelector("[name='surface_comments']").value = data.surface_comments || "";
+
+    document.querySelector("[name='method_status']").value = data.method_status || "";
+    document.querySelector("[name='method_responsible']").value = data.method_responsible || "";
+    document.querySelector("[name='method_comments']").value = data.method_comments || "";
+
+    document.querySelector("[name='c1_status']").value = data.c1_status || "";
+    document.querySelector("[name='c1_responsible']").value = data.c1_responsible || "";
+    document.querySelector("[name='c1_comments']").value = data.c1_comments || "";
+
+    document.querySelector("[name='c2_status']").value = data.c2_status || "";
+    document.querySelector("[name='c2_responsible']").value = data.c2_responsible || "";
+    document.querySelector("[name='c2_comments']").value = data.c2_comments || "";
+
+    document.querySelector("[name='c3_status']").value = data.c3_status || "";
+    document.querySelector("[name='c3_responsible']").value = data.c3_responsible || "";
+    document.querySelector("[name='c3_comments']").value = data.c3_comments || "";
+
+    document.querySelector("[name='c4_status']").value = data.c4_status || "";
+    document.querySelector("[name='c4_responsible']").value = data.c4_responsible || "";
+    document.querySelector("[name='c4_comments']").value = data.c4_comments || "";
+
+    document.querySelector("[name='c5_status']").value = data.c5_status || "";
+    document.querySelector("[name='c5_responsible']").value = data.c5_responsible || "";
+    document.querySelector("[name='c5_comments']").value = data.c5_comments || "";
+
+
+    document.querySelector("[name='d1_status']").value = data.d1_status || "";
+    document.querySelector("[name='d1_responsible']").value = data.d1_responsible || "";
+    document.querySelector("[name='d1_comments']").value = data.d1_comments || "";
+
+    document.querySelector("[name='d2_status']").value = data.d2_status || "";
+    document.querySelector("[name='d2_responsible']").value = data.d2_responsible || "";
+    document.querySelector("[name='d2_comments']").value = data.d2_comments || "";
+
+    document.querySelector("[name='d3_status']").value = data.d3_status || "";
+    document.querySelector("[name='d3_responsible']").value = data.d3_responsible || "";
+    document.querySelector("[name='d3_comments']").value = data.d3_comments || "";
+
+    document.querySelector("[name='d4_status']").value = data.d4_status || "";
+    document.querySelector("[name='d4_responsible']").value = data.d4_responsible || "";
+    document.querySelector("[name='d4_comments']").value = data.d4_comments || "";
+
+    document.querySelector("[name='d5_status']").value = data.d5_status || "";
+    document.querySelector("[name='d5_responsible']").value = data.d5_responsible || "";
+    document.querySelector("[name='d5_comments']").value = data.d5_comments || "";
+
+
+    document.querySelector("[name='e1_status']").value = data.e1_status || "";
+    document.querySelector("[name='e1_responsible']").value = data.e1_responsible || "";
+    document.querySelector("[name='e1_comments']").value = data.e1_comments || "";
+
+    document.querySelector("[name='e2_status']").value = data.e2_status || "";
+    document.querySelector("[name='e2_responsible']").value = data.e2_responsible || "";
+    document.querySelector("[name='e2_comments']").value = data.e2_comments || "";
+
+    document.querySelector("[name='e3_status']").value = data.e3_status || "";
+    document.querySelector("[name='e3_responsible']").value = data.e3_responsible || "";
+    document.querySelector("[name='e3_comments']").value = data.e3_comments || "";
+
+    document.querySelector("[name='f1_status']").value = data.f1_status || "";
+    document.querySelector("[name='f1_responsible']").value = data.f1_responsible || "";
+    document.querySelector("[name='f1_comments']").value = data.f1_comments || "";
+
+    document.querySelector("[name='f2_status']").value = data.f2_status || "";
+    document.querySelector("[name='f2_responsible']").value = data.f2_responsible || "";
+    document.querySelector("[name='f2_comments']").value = data.f2_comments || "";
+
+    document.querySelector("[name='f3_status']").value = data.f3_status || "";
+    document.querySelector("[name='f3_responsible']").value = data.f3_responsible || "";
+    document.querySelector("[name='f3_comments']").value = data.f3_comments || "";
+
+    document.querySelector("[name='g1_status']").value = data.g1_status || "";
+    document.querySelector("[name='g1_responsible']").value = data.g1_responsible || "";
+    document.querySelector("[name='d1_comments']").value = data.g1_comments || "";
+
+    document.querySelector("[name='g2_status']").value = data.g2_status || "";
+    document.querySelector("[name='g2_responsible']").value = data.g2_responsible || "";
+    document.querySelector("[name='g2_comments']").value = data.g2_comments || "";
+
+    document.querySelector("[name='g3_status']").value = data.g3_status || "";
+    document.querySelector("[name='g3_responsible']").value = data.g3_responsible || "";
+    document.querySelector("[name='g3_comments']").value = data.g3_comments || "";
+
+    document.querySelector("[name='h1_status']").value = data.h1_status || "";
+    document.querySelector("[name='h1_responsible']").value = data.h1_responsible || "";
+    document.querySelector("[name='d1_comments']").value = data.h1_comments || "";
+
+    document.querySelector("[name='h2_status']").value = data.h2_status || "";
+    document.querySelector("[name='h2_responsible']").value = data.h2_responsible || "";
+    document.querySelector("[name='h2_comments']").value = data.h2_comments || "";
+
+    document.querySelector("[name='h3_status']").value = data.h3_status || "";
+    document.querySelector("[name='h3_responsible']").value = data.h3_responsible || "";
+    document.querySelector("[name='h3_comments']").value = data.h3_comments || "";
+
+    document.querySelector("[name='i1_status']").value = data.i1_status || "";
+    document.querySelector("[name='i1_responsible']").value = data.i1_responsible || "";
+    document.querySelector("[name='i1_comments']").value = data.i1_comments || "";
+
+    document.querySelector("[name='i2_status']").value = data.i2_status || "";
+    document.querySelector("[name='i2_responsible']").value = data.i2_responsible || "";
+    document.querySelector("[name='i2_comments']").value = data.i2_comments || "";
+
+    document.querySelector("[name='i3_status']").value = data.i3_status || "";
+    document.querySelector("[name='i3_responsible']").value = data.i3_responsible || "";
+    document.querySelector("[name='i3_comments']").value = data.i3_comments || "";
+
+    document.querySelector("[name='i4_status']").value = data.i4_status || "";
+    document.querySelector("[name='i4_responsible']").value = data.i4_responsible || "";
+    document.querySelector("[name='i4_comments']").value = data.i4_comments || "";
+
+    document.querySelector("[name='i5_status']").value = data.i5_status || "";
+    document.querySelector("[name='i5_responsible']").value = data.i5_responsible || "";
+    document.querySelector("[name='i5_comments']").value = data.i5_comments || "";
+
+    document.querySelector("[name='i6_status']").value = data.i6_status || "";
+    document.querySelector("[name='i6_responsible']").value = data.i6_responsible || "";
+    document.querySelector("[name='i6_comments']").value = data.i6_comments || "";
+
+    document.querySelector("[name='i7_status']").value = data.i7_status || "";
+    document.querySelector("[name='i7_responsible']").value = data.i7_responsible || "";
+    document.querySelector("[name='i7_comments']").value = data.i7_comments || "";
+
+    document.querySelector("[name='final1_status']").value = data.final1_status || "";
+    document.querySelector("[name='final1_responsible']").value = data.final1_responsible || "";
+    document.querySelector("[name='final1_comments']").value = data.final1_comments || "";
+
+    document.querySelector("[name='final2_status']").value = data.final2_status || "";
+    document.querySelector("[name='final2_responsible']").value = data.final2_responsible || "";
+    document.querySelector("[name='final2_comments']").value = data.final2_comments || "";
+
+    document.querySelector("[name='final3_status']").value = data.final3_status || "";
+    document.querySelector("[name='final3_responsible']").value = data.final3_responsible || "";
+    document.querySelector("[name='final3_comments']").value = data.final3_comments || "";
+
+    document.querySelector("[name='marketing_attendance']").value = data.marketing_attendance || "";
+    document.querySelector("[name='materials_attendance']").value = data.materials_attendance || "";
+    document.querySelector("[name='quality_attendance']").value = data.quality_attendance || "";
+    document.querySelector("[name='pe_attendance']").value = data.pe_attendance || "";
+    document.querySelector("[name='me_attendance']").value = data.me_attendance || "";
+    document.querySelector("[name='pm_attendance']").value = data.pm_attendance || "";
+
+    let fields = [
+    "marketing_date",
+    "material_date",
+    "quality_date",
+    "pe_date",
+    "me_date",
+    "pm_date"
+];
+
+fields.forEach(id => {
+    let el = document.getElementById(id);
+    if (el) {
+        el.value = data.att_date;
+    }
+});
+    // --- NEW ADDITION START ---
+                // 1. Show the edit button when data is loaded
+                const eBtn = document.getElementById('editBtn');
+                if (eBtn) { eBtn.style.display = 'block'; }
+                
+                // 2. Lock all fields immediately after autofilling
+                toggleFormFields(false); 
+                // --- NEW ADDITION END ---
+
+        } else {
+            alert(res.message);
+        }
+    });
+});
+
+
+// --- 4. AJAX SAVE (The Fix for the Black Page) ---
+    if (feasibilityForm) {
+        feasibilityForm.addEventListener('submit', function (e) {
+            e.preventDefault(); 
+            e.stopImmediatePropagation();
+
+            // Client-side validation
+            const itemNo = document.getElementById('itemNo').value;
+            if (!itemNo) {
+                alert("Please select an Item No before creating.");
+                return;
+            }
+
+            // Enable to collect data
+            const allElements = feasibilityForm.querySelectorAll('input, select, textarea');
+            allElements.forEach(el => {
+                el.disabled = false;
+                el.readOnly = false;
+            });
+
+            const formData = new FormData(this);
+
+            fetch('/feasibility/create/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(res => {
+                if (res.status === "success") {
+                    alert("Data saved successfully!");
+                    
+                    // Add newly saved record to the table
+                    if(res.record) {
+                        const tbody = document.querySelector('#recordsTable tbody');
+                        // Check if row exists to update or insert new
+                        let existingRow = document.getElementById(`row-${res.record.item_no}`);
+                        
+                        const rowHtml = `
+                          <td>${res.record.item_no}</td>
+                          <td>${res.record.customer_name}</td>
+                          <td>${res.record.part_name}</td>
+                          <td>${res.record.feasibility_type}</td>
+                          <td>${res.record.feasibility_no}</td>
+                          <td>${res.record.updated_on}</td>
+                        `;
+                        
+                        if(existingRow) {
+                            existingRow.innerHTML = rowHtml;
+                        } else {
+                            const tr = document.createElement('tr');
+                            tr.id = `row-${res.record.item_no}`;
+                            tr.innerHTML = rowHtml;
+                            tbody.insertBefore(tr, tbody.firstChild); // Prepend
+                        }
+                    }
+
+                    // Clear the form and reset locks
+                    feasibilityForm.reset();
+                    toggleFormFields(true); // reset allows typing again
+                } else {
+                    alert("Error: " + res.message);
+                }
+            })
+            .catch(err => {
+                alert("A server error occurred.");
+                console.error(err);
+            });
+        });
+    }
+
+    document.getElementById('btn-back')?.addEventListener('click', () => window.history.back());
+});
 </script>
 {% endblock %}

@@ -1,8 +1,15 @@
-from django.shortcuts import render
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.urls import reverse
+from urllib.parse import urlencode
 import datetime
 import logging
 from .models import ApplyTemplate, ItemCard, UnitOfMeasure, ItemCategory, ProductGroup, Cell, CellType, HSNCode
+from .forms import SendItemEmailForm
 
 logger = logging.getLogger(__name__)
 
@@ -119,3 +126,57 @@ def get_item_details(request):
     except Exception as e:
         logger.exception("Error in get_item_details for %s", item_no)
         return JsonResponse({"error": str(e)}, status=500)
+
+
+def send_item_email(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid request method.")
+        return redirect("item_creation")
+
+    form = SendItemEmailForm(request.POST)
+    customer_id = request.POST.get("customer_id", "")
+    customer_name = request.POST.get("customer_name", "")
+    
+    redirect_url = "{}?{}".format(
+        reverse("item_creation"),
+        urlencode({"customer_id": customer_id, "name": customer_name}),
+    )
+
+    if not form.is_valid():
+        messages.error(request, "Please enter a valid recipient email address.")
+        return redirect(redirect_url)
+
+    recipient_email = form.cleaned_data["recipient_email"]
+    
+    item_details = {
+        "Item No": request.POST.get("no", ""),
+        "Description": request.POST.get("description", ""),
+        "Customer ID": customer_id,
+        "Customer Name": customer_name,
+        "Base Unit of Measure": request.POST.get("base_unit_of_measure", ""),
+        "Status": request.POST.get("status", ""),
+        "Revision No": request.POST.get("revision", ""),
+        "HSN/SAC Code": request.POST.get("hsn", ""),
+        "Last Modified Date": request.POST.get("lastModifiedDate", ""),
+    }
+
+    html_body = render_to_string(
+        "item_creation/emails/item_details_email.html",
+        {"item_details": item_details},
+    )
+
+    email = EmailMultiAlternatives(
+        subject=f"Item Details - {item_details['Item No']}",
+        body="Please view this email in an HTML-supported client.",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[recipient_email],
+    )
+    email.attach_alternative(html_body, "text/html")
+
+    try:
+        email.send()
+        messages.success(request, f"Item details sent successfully to {recipient_email}.")
+    except Exception as exc:
+        messages.error(request, f"Email could not be sent: {exc}")
+
+    return redirect(redirect_url)

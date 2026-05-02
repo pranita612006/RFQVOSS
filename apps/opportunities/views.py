@@ -1,5 +1,11 @@
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.urls import reverse
+from urllib.parse import urlencode
 from .models import Opportunity
 from apps.item_creation.models import ItemCard
 from .models import CustomerInfo, OppSalesPeople, OppSalesCycles, OppSegment, OpportunityMaster, OpportunityMasterECN
@@ -7,6 +13,7 @@ from django.utils.timezone import now
 from django.db.models import Max
 
 from django.shortcuts import render, redirect  # Add redirect to your imports
+from .forms import SendItemEmailForm
 
 def opportunity_creation(request):
     # 1. Extract values from the URL (the ?customer_id=... part)
@@ -38,6 +45,60 @@ def opportunity_creation(request):
         "selected_customer_id": customer_id,
         "selected_customer_name": customer_name,
     })
+
+
+def send_item_email(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid request method.")
+        return redirect("opportunity_creation")
+
+    form = SendItemEmailForm(request.POST)
+    customer_id = request.POST.get("custId", "")
+    customer_name = request.POST.get("customer_name", "")
+    redirect_url = "{}?{}".format(
+        reverse("opportunity_creation"),
+        urlencode({"customer_id": customer_id, "name": customer_name}),
+    )
+
+    if not form.is_valid():
+        messages.error(request, "Please enter a valid recipient email address.")
+        return redirect(redirect_url)
+
+    recipient_email = form.cleaned_data["recipient_email"]
+    item_details = {
+        "Item No / Part Number": request.POST.get("itemNo", ""),
+        "Project Name": request.POST.get("projectName", ""),
+        "Customer Name": request.POST.get("customer_name", ""),
+        "Contact Name": request.POST.get("contactName", ""),
+        "Contact No": request.POST.get("contactNo", ""),
+        "Estimated Sales Price": request.POST.get("estimatedSalesPrice", ""),
+        "Nominated Price": request.POST.get("nominatedPrice", ""),
+        "Estimated Value (PA)": request.POST.get("estimatedValuePa", ""),
+        "Estimated Value Euro": request.POST.get("estimatedValueEuro", ""),
+        "Remarks": request.POST.get("remarks", ""),
+        "Status": request.POST.get("status", ""),
+    }
+
+    html_body = render_to_string(
+        "opportunities/emails/item_details_email.html",
+        {"item_details": item_details},
+    )
+
+    email = EmailMultiAlternatives(
+        subject="Opportunity Details",
+        body="Please view this email in an HTML-supported client.",
+        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+        to=[recipient_email],
+    )
+    email.attach_alternative(html_body, "text/html")
+
+    try:
+        email.send()
+        messages.success(request, f"Opportunity details sent successfully to {recipient_email}.")
+    except Exception as exc:
+        messages.error(request, f"Email could not be sent: {exc}")
+
+    return redirect(redirect_url)
 
 def get_item_numbers(request):
     customer_id = request.GET.get("customer_id", "")

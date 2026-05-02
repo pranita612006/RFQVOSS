@@ -14,6 +14,15 @@
 
     <form method="post" novalidate>
       {% csrf_token %}
+      {% if messages %}
+      <div class="px-3 pt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
       <div class="card-body scrollable-form p-3">
         <div class="row gx-3">
           <!-- LEFT COLUMN -->
@@ -37,7 +46,7 @@
 
             <div class="form-group mb-2">
                 <label for="itemNo">Item No / Part Number</label>
-                <select id="itemNo" class="form-control">
+                <select id="itemNo" name="itemNo" class="form-control">
     <option value="">Select Item No</option>
 </select>
             </div>
@@ -329,12 +338,29 @@
       </div>
 
       <div class="card-footer text-right">
-        <button type="submit" class="btn btn-primary">Add</button>
+        <button type="submit" name="action" value="add" class="btn btn-primary">Add</button>
         <button type="button" class="btn btn-warning">Update</button>
         <button type="button" class="btn btn-info">ECN Request</button>
         <button type="button" class="btn btn-danger">Delete</button>
         <button type="button" class="btn btn-success">Complete</button>
       </div>
+      <div class="px-3 pb-3">
+        <details>
+          <summary class="btn btn-outline-primary mt-2">Send Email</summary>
+          <div class="border rounded p-3 mt-2">
+            <div class="form-group mb-2">
+              <label for="recipient_email">Recipient Email</label>
+              <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="Enter recipient email address" required>
+            </div>
+            <button type="submit" class="btn btn-primary" formaction="{% url 'send_item_email' %}">
+              Send Email
+            </button>
+          </div>
+        </details>
+      </div>
+      <a href="/feasibility_form/?customer_id={{ selected_customer_id }}&name={{ selected_name }}" class="btn btn-primary">
+    Go to Feasibility
+      </a>
     </form>
   </div>
 </div>
