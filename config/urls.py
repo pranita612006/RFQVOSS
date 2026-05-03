@@ -1,22 +1,30 @@
 from django.contrib import admin
 from django.urls import include, path
-from apps.pages import views as page_views   # ✅ IMPORTANT
+
+from apps.pages import views as page_views
+from apps.item_creation import views as item_views
 
 urlpatterns = [
+    # ECN REQUEST PAGE
+    path(
+        "ecn-request/",
+        item_views.ecn_request_page,
+        name="ecn_request_page",
+    ),
 
-    # ✅ DASHBOARD URLS (PUT AT TOP — VERY IMPORTANT)
-    path('dashboard/v1/', page_views.dashboard_v1, name='dashboard_v1'),
-    path('dashboard/v2/', page_views.dashboard_v2, name='dashboard_v2'),
-    path('dashboard/v3/', page_views.dashboard_v3, name='dashboard_v3'),
+    # DASHBOARD URLS
+    path("dashboard/v1/", page_views.dashboard_v1, name="dashboard_v1"),
+    path("dashboard/v2/", page_views.dashboard_v2, name="dashboard_v2"),
+    path("dashboard/v3/", page_views.dashboard_v3, name="dashboard_v3"),
 
-    # EXISTING
-    path("", include("apps.opportunities.urls")), 
-    path('', include('apps.pages.urls')),
-    path('', include('apps.dyn_dt.urls')),
-    path('', include('apps.dyn_api.urls')),
-    path('charts/', include('apps.charts.urls')),
+    # APP URLS
+    path("", include("apps.opportunities.urls")),
+    path("", include("apps.pages.urls")),
+    path("", include("apps.dyn_dt.urls")),
+    path("", include("apps.dyn_api.urls")),
+    path("charts/", include("apps.charts.urls")),
     path("admin/", admin.site.urls),
-    path("", include('admin_adminlte.urls')),
+    path("", include("admin_adminlte.urls")),
     path("", include("apps.todo.urls")),
     path("", include("apps.customer_creation.urls")),
     path("", include("apps.item_creation.urls")),
