@@ -15,6 +15,15 @@ from config.decorators import require_active_customer
 logger = logging.getLogger(__name__)
 
 @require_active_customer
+# ✅ ECN Request Page
+def ecn_request_page(request):
+    context = {
+        "customer_id": request.GET.get("customer_id", ""),
+        "customer_name": request.GET.get("customer_name", ""),
+    }
+    return render(request, "item_creation/frm_itemcreation_ecn.html", context)
+
+# ✅ Item Creation Form
 def item_creation_form(request):
     selected_customer_id = request.active_customer['id']
     selected_name = request.active_customer['name']
@@ -39,7 +48,7 @@ def item_creation_form(request):
     return render(request, "item_creation/item_creation_form.html", {
         "template_name": template_names,
         "s_item": items,
-        "uoms": uoms,   # 👈 PASS HERE
+        "uoms": uoms,
         "item_categories": item_categories,
         "cells": cells,
         "cell_types": cell_types,
@@ -50,6 +59,7 @@ def item_creation_form(request):
         "first_item_no": first_item_no,
     })
 
+# ✅ Get Template Data
 def get_template_data(request):
     template_name = request.GET.get("template_name", "")
     try:
@@ -78,6 +88,7 @@ def get_template_data(request):
         logger.exception("Error in get_template_data for %s", template_name)
         return JsonResponse({"error": str(e)}, status=500)
 
+# ✅ Get Item Details
 def get_item_details(request):
     item_no = request.GET.get("item_no", "").strip()
     cust_id = request.GET.get("customer_id", "").strip()
@@ -95,7 +106,7 @@ def get_item_details(request):
         if not item:
             return JsonResponse({"error": "Item not found"}, status=404)
 
-        # Handle date separately (same as before but compact)
+        # Handle date separately
         last_modified = ""
         if getattr(item, "lastModifiedDate", None):
             try:
