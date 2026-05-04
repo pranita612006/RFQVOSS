@@ -3,13 +3,15 @@ from django.http import JsonResponse
 from .models import ItemCard, Feasibility
 from datetime import datetime
 from django.views.decorators.csrf import csrf_protect
+from config.decorators import require_active_customer
 
 @csrf_protect
+@require_active_customer
 def feasibility(request):
     # GET Request Logic
-    customer_id = request.GET.get('customer_id', '')
+    customer_id = request.active_customer['id']
+    customer_name = request.active_customer['name']
     items = []
-    customer_name = ""
 
     # Fetch unique customers for the dropdown
     customers = ItemCard.objects.values('customer_id', 'customer_name').distinct().order_by('customer_name')
@@ -301,7 +303,7 @@ def feasibility_create(request):
     return JsonResponse({"status": "error", "message": "Invalid request method."})
 
 def feasibility_list(request):
-    customer_id = request.GET.get('customer_id', '')
+    customer_id = getattr(request, 'active_customer', {}).get('id', '')
     
     # Base query for records
     if customer_id:

@@ -10,6 +10,12 @@ def customer_form(request):
         name = request.POST.get("name")
         search_name = request.POST.get("search_name")
 
+        if customer_id:
+            request.session['active_customer_id'] = customer_id
+            request.session['active_customer_name'] = name
+            request.session['active_customer_search_name'] = search_name
+            request.session.modified = True
+
         return redirect(
             f"/item_creation/?customer_id={customer_id}&name={name}&search_name={search_name}"
         )

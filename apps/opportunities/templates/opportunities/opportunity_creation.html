@@ -128,7 +128,7 @@
             <div class="form-group mb-2">
               <label for="custId">Cust ID</label>
 <input type="text" class="form-control" id="custId" name="custId"
-       value="{{ selected_customer_id }}">
+       value="{{ global_customer_id }}" {% if has_active_customer %}readonly{% endif %}>
             </div>
 
             <div class="form-group mb-2">
@@ -212,7 +212,7 @@
             <div class="form-group mb-2">
               <label for="customer_name">Customer Name</label>
 <input type="text" class="form-control" id="customer_name" name="customer_name"
-       value="{{ selected_customer_name }}">
+       value="{{ global_customer_name }}" {% if has_active_customer %}readonly{% endif %}>
                   </div>
 
             <div class="form-group mb-2">
@@ -358,7 +358,7 @@
           </div>
         </details>
       </div>
-      <a href="/feasibility_form/?customer_id={{ selected_customer_id }}&name={{ selected_name }}" class="btn btn-primary">
+      <a href="/feasibility_form/?customer_id={{ global_customer_id }}&name={{ global_customer_name }}" class="btn btn-primary">
     Go to Feasibility
       </a>
     </form>
@@ -436,7 +436,7 @@ const fill = (id, val) => {
 
 // 📌 3. Load Opportunity List
 document.getElementById("searchOpportunityNo").addEventListener("focus", function () {
-    const customerId = "{{ selected_customer_id }}";
+    const customerId = "{{ global_customer_id }}";
 
     fetch(`/get_item_numbers/?customer_id=${customerId}`)
         .then(res => res.json())

@@ -14,11 +14,13 @@ from django.db.models import Max
 
 from django.shortcuts import render, redirect  # Add redirect to your imports
 from .forms import SendItemEmailForm
+from config.decorators import require_active_customer
 
+@require_active_customer
 def opportunity_creation(request):
-    # 1. Extract values from the URL (the ?customer_id=... part)
-    customer_id = request.GET.get('customer_id', '')
-    customer_name = request.GET.get('name', '')
+    # 1. Extract values from the active customer session
+    customer_id = request.active_customer['id']
+    customer_name = request.active_customer['name']
 
     if request.method == "POST":
         action = request.POST.get("action")

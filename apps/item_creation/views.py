@@ -10,12 +10,14 @@ import datetime
 import logging
 from .models import ApplyTemplate, ItemCard, UnitOfMeasure, ItemCategory, ProductGroup, Cell, CellType, HSNCode
 from .forms import SendItemEmailForm
+from config.decorators import require_active_customer
 
 logger = logging.getLogger(__name__)
 
+@require_active_customer
 def item_creation_form(request):
-    selected_customer_id = request.GET.get("customer_id")
-    selected_name = request.GET.get("name")
+    selected_customer_id = request.active_customer['id']
+    selected_name = request.active_customer['name']
 
     template_names = ApplyTemplate.objects.values_list("template_name", flat=True)
 

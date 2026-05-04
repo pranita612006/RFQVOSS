@@ -16,10 +16,10 @@
       <div class="card-body scrollable-form p-3">
         <div class="form-group">
     <label for="customer_id">Customer ID</label>
-    <select id="customer_id" name="customer_id" class="form-control">
+    <select id="customer_id" name="customer_id" class="form-control" {% if has_active_customer %}readonly{% endif %}>
         <option value="">-- Select Customer --</option>
         {% for cust in customers %}
-        <option value="{{ cust.customer_id }}" {% if cust.customer_id == selected_customer_id %}selected{% endif %}>{{ cust.customer_id }} - {{ cust.customer_name }}</option>
+        <option value="{{ cust.customer_id }}" {% if cust.customer_id == global_customer_id %}selected{% endif %}>{{ cust.customer_id }} - {{ cust.customer_name }}</option>
         {% endfor %}
     </select>
     </div>
@@ -38,7 +38,7 @@
 
             <div class="form-group mb-2">
               <label for="customer_name">Customer Name</label>
-              <input type="text" class="form-control" id="customer_name" name="customer_name">
+              <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ global_customer_name }}" {% if has_active_customer %}readonly{% endif %}>
             </div>
 
             <div class="form-group mb-2">
@@ -2003,7 +2003,6 @@
 
       <div class="card-footer text-right">
         <button type="submit" class="btn btn-success" id="saveBtn">Save</button>
-        
       </div>
     </form>
   </div>

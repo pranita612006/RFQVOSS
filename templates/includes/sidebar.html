@@ -31,6 +31,23 @@
       </div>
     </div>
 
+    <!-- ACTIVE CUSTOMER PANEL -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex" style="flex-direction: column;">
+      {% if has_active_customer %}
+          <div class="info text-success font-weight-bold">
+            <i class="fas fa-check-circle"></i> {{ global_customer_name }}
+          </div>
+          <div class="info text-white" style="font-size: 0.85em; padding-top: 0;">
+            ID: {{ global_customer_id }} | Code: {{ global_customer_code }}
+          </div>
+      {% else %}
+          <div class="info text-warning font-weight-bold">
+            <i class="fas fa-exclamation-triangle"></i> No Customer Selected
+          </div>
+          <a href="{% url 'customer_form' %}" class="btn btn-sm btn-outline-warning mx-2 mt-2">Select Customer</a>
+      {% endif %}
+    </div>
+
     <!-- SEARCH -->
     <div class="form-inline">
       <div class="input-group" data-widget="sidebar-search">
